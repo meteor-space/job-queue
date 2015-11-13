@@ -1,0 +1,6 @@
+{
+  "space:base": {
+    "git":"https://github.com/meteor-space/base.git",
+    "branch": "develop"
+  }
+}
