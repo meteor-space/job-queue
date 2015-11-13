@@ -18,8 +18,7 @@ Package.onUse(function(api) {
   ]);
 
   api.addFiles([
-    'source/server/module.js',
-    'source/server/job_server_logger.js',
+    'source/server/module.js'
   ],'server');
 
 });
