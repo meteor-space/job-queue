@@ -12,13 +12,18 @@ Package.onUse(function(api) {
 
   api.use([
     'mongo',
+    'ecmascript',
     'underscore',
     'space:base@3.2.1',
+    'space:messaging@2.1.0',
     'vsivsi:job-collection@1.2.3'
   ]);
 
   api.addFiles([
-    'source/server/module.js'
+    'source/server/module.js',
+    'source/server/events.js',
+    'source/server/event-publisher.js',
+    'source/server/logger.js'
   ],'server');
 
 });
@@ -27,11 +32,14 @@ Package.onTest(function(api) {
 
   api.use([
     'mongo',
+    'ecmascript',
     'practicalmeteor:munit@2.1.5',
     'space:base@3.2.1',
-    'space:job-queue'
+    'space:messaging@2.1.0',
+    'space:job-queue',
+    'space:testing@2.0.1'
   ]);
 
-  api.addFiles('tests/server/job_server.tests.js', 'server');
+  api.addFiles('tests/server/job-server.tests.js', 'server');
 
 });
