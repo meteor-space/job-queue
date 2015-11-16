@@ -22,7 +22,7 @@ Package.onUse(function(api) {
   api.addFiles([
     'source/server/module.js',
     'source/server/events.js',
-    'source/server/event_publisher.js',
+    'source/server/event-publisher.js',
     'source/server/logger.js'
   ],'server');
 
@@ -40,6 +40,6 @@ Package.onTest(function(api) {
     'space:testing@2.0.1'
   ]);
 
-  api.addFiles('tests/server/job_server.tests.js', 'server');
+  api.addFiles('tests/server/job-server.tests.js', 'server');
 
 });
