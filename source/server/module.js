@@ -18,7 +18,7 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
 
   // ============= LIFECYCLE =============
 
-  onInitialize: function () {
+  onInitialize() {
     this.injector.map('JobCollection').to(JobCollection);
     this.injector.map('Job').to(Job);
     this.injector.map('Space.jobQueue.EventPublisher').asSingleton();
@@ -26,29 +26,29 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
       this.injector.map('Space.jobQueue.Logger').asSingleton()
   },
 
-  afterInitialize: function () {
+  afterInitialize() {
     this._setupQueue();
     this.injector.create('Space.jobQueue.EventPublisher');
     if(this._isLogging())
       this.injector.create('Space.jobQueue.Logger')
   },
 
-  onStart: function () {
+  onStart() {
     this.injector.get('Space.jobQueue.Jobs').startJobServer();
     this._allowAccess();
   },
 
-  onStop: function () {
+  onStop() {
     this.injector.get('Space.jobQueue.Jobs').shutdownJobServer();
   },
 
-  onReset: function () {
+  onReset() {
     this.injector.get('Space.jobQueue.Jobs').remove({});
   },
 
   // ============= PRIVATE METHODS =============
 
-  _setupQueue: function () {
+  _setupQueue() {
     var Collection;
     var JobCollection = this.injector.get('JobCollection');
     if(Space.jobQueue.jobCollection) {
@@ -61,20 +61,20 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     this.injector.map('Space.jobQueue.Jobs').to(Collection);
   },
 
-  _isLogging: function () {
+  _isLogging() {
     return this.configuration.jobQueue.log.enabled
   },
 
-  _allowAccess: function () {
+  _allowAccess() {
     this.injector.get('Space.jobQueue.Jobs').allow({
-      worker: function (userId, method, params) {
+      worker(userId, method, params) {
         if(userId) {
           return true
         } else {
           return false
         }
       },
-      creator: function (userId, method, params) {
+      creator(userId, method, params) {
         if(userId) {
           return true
         } else {
@@ -84,7 +84,7 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     })
   },
 
-  _collectionOptions: function () {
+  _collectionOptions() {
     var driverOptions;
     if(this._externalMongo()) {
       if(this._externalMongoNeedsOplog()) {
@@ -99,11 +99,11 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     }
   },
 
-  _externalMongo: function () {
+  _externalMongo() {
     if(Space.getenv('SPACE_JQ_MONGO_URL', '').length > 0) return true;
   },
 
-  _externalMongoNeedsOplog: function () {
+  _externalMongoNeedsOplog() {
     if(Space.getenv('SPACE_JQ_MONGO_OPLOG_URL', '').length > 0) return true;
   }
 

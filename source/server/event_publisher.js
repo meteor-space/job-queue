@@ -4,7 +4,7 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
     jobCollection: 'Space.jobQueue.Jobs'
   },
 
-  onDependenciesReady: function () {
+  onDependenciesReady() {
     var self = this;
     this.jobCollection.events.on('call', function (message) {
       switch(message.method) {
@@ -57,78 +57,78 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
     });
   },
 
-  _onStartJobServer: function () {
+  _onStartJobServer() {
     this.publish(new Space.jobQueue.JobServerStarted({
       collection: this.jobCollection._name
     }))
   },
-  _onShutdownJobServer: function () {
+  _onShutdownJobServer() {
     this.publish(new Space.jobQueue.JobServerShutdown({
       collection: this.jobCollection._name
     }))
   },
-  _onGetWork: function (message) {
+  _onGetWork(message) {
     this.publish(new Space.jobQueue.JobTakenByWorker({
       collection: this.jobCollection._name
     }))
   },
-  _onJobRemove: function (message) {
+  _onJobRemove(message) {
     this.publish(new Space.jobQueue.JobRemoved({
       collection: this.jobCollection._name
     }))
   },
-  _onJobPause: function (message) {
+  _onJobPause(message) {
     this.publish(new Space.jobQueue.JobPaused({
       collection: this.jobCollection._name
     }))
   },
-  _onJobResume: function (message) {
+  _onJobResume(message) {
     this.publish(new Space.jobQueue.JobResumed({
       collection: this.jobCollection._name
     }))
   },
-  _onJobReady: function (message) {
+  _onJobReady(message) {
     this.publish(new Space.jobQueue.JobReady({
       collection: this.jobCollection._name
     }))
   },
-  _onJobCancel: function (message) {
+  _onJobCancel(message) {
     this.publish(new Space.jobQueue.JobCancelled({
       collection: this.jobCollection._name
     }))
   },
-  _onJobRestart: function (message) {
+  _onJobRestart(message) {
     this.publish(new Space.jobQueue.JobRestarted({
       collection: this.jobCollection._name
     }))
   },
-  _onJobSave: function (message) {
+  _onJobSave(message) {
     this.publish(new Space.jobQueue.JobAdded({
       collection: this.jobCollection._name,
       type: message.params[0].type
     }))
   },
-  _onJobRerun: function (message) {
+  _onJobRerun(message) {
     this.publish(new Space.jobQueue.JobRerun({
       collection: this.jobCollection._name
     }))
   },
-  _onJobProgress: function (message) {
+  _onJobProgress(message) {
     this.publish(new Space.jobQueue.JobProgressed({
       collection: this.jobCollection._name
     }))
   },
-  _onJobLog: function (message) {
+  _onJobLog(message) {
     this.publish(new Space.jobQueue.JobLogEntryMade({
       collection: this.jobCollection._name
     }))
   },
-  _onJobDone: function (message) {
+  _onJobDone(message) {
     this.publish(new Space.jobQueue.JobCompleted({
       collection: this.jobCollection._name
     }))
   },
-  _onJobFail: function (message) {
+  _onJobFail(message) {
     this.publish(new Space.jobQueue.JobFailed({
       collection: this.jobCollection._name
     }))
