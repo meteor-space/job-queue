@@ -1,29 +1,58 @@
-
 Space.Object.extend(Space.jobQueue, 'EventPublisher', {
 
   dependencies: {
     jobCollection: 'Space.jobQueue.Jobs'
   },
 
-  onDependenciesReady: function(){
+  onDependenciesReady: function () {
     var self = this;
-    this.jobCollection.events.on('call', function(message) {
-      switch(message.method){
-        case 'startJobServer': self._onStartJobServer(message); break;
-        case 'shutdownJobServer': self._onShutdownJobServer(message); break;
-        case 'getWork': self._onGetWork(message); break;
-        case 'jobRemove': self._onJobRemove(message); break;
-        case 'jobPause': self._onJobPause(message); break;
-        case 'jobResume': self._onJobResume(message); break;
-        case 'jobReady':self._onJobReady(message); break;
-        case 'jobCancel': self._onJobCancel(message); break;
-        case 'jobRestart': self._onJobRestart(message); break;
-        case 'jobSave': self._onJobSave(message); break;
-        case 'jobRerun': self._onJobRerun(message); break;
-        case 'jobProgress': self._onJobProgress(message); break;
-        case 'jobLog': self._onJobLog(message); break;
-        case 'jobDone': self._onJobDone(message); break;
-        case 'jobFail': self._onJobFail(message); break;
+    this.jobCollection.events.on('call', function (message) {
+      switch(message.method) {
+        case 'startJobServer':
+          self._onStartJobServer(message);
+          break;
+        case 'shutdownJobServer':
+          self._onShutdownJobServer(message);
+          break;
+        case 'getWork':
+          self._onGetWork(message);
+          break;
+        case 'jobRemove':
+          self._onJobRemove(message);
+          break;
+        case 'jobPause':
+          self._onJobPause(message);
+          break;
+        case 'jobResume':
+          self._onJobResume(message);
+          break;
+        case 'jobReady':
+          self._onJobReady(message);
+          break;
+        case 'jobCancel':
+          self._onJobCancel(message);
+          break;
+        case 'jobRestart':
+          self._onJobRestart(message);
+          break;
+        case 'jobSave':
+          self._onJobSave(message);
+          break;
+        case 'jobRerun':
+          self._onJobRerun(message);
+          break;
+        case 'jobProgress':
+          self._onJobProgress(message);
+          break;
+        case 'jobLog':
+          self._onJobLog(message);
+          break;
+        case 'jobDone':
+          self._onJobDone(message);
+          break;
+        case 'jobFail':
+          self._onJobFail(message);
+          break;
       }
     });
   },

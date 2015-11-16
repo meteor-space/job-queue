@@ -1,4 +1,3 @@
-
 describe("Space.jobQueue", function () {
 
   MyApp = Space.Application.define('MyApp', {
@@ -23,13 +22,13 @@ describe("Space.jobQueue", function () {
 
   });
 
-  describe("Lifecycle", function (){
+  describe("Lifecycle", function () {
 
-    beforeEach(function(){
+    beforeEach(function () {
       this.myApp = new MyApp()
     });
 
-    afterEach(function(){
+    afterEach(function () {
       this.myApp.reset();
     });
 
@@ -51,9 +50,9 @@ describe("Space.jobQueue", function () {
 
   });
 
-  describe("Job events", function (){
+  describe("Job events", function () {
 
-    beforeEach(function(){
+    beforeEach(function () {
       this.myApp = new MyApp()
       let injector = this.myApp.injector
       let job = injector.get('Job');
@@ -64,7 +63,7 @@ describe("Space.jobQueue", function () {
       this.eventBus = this.myApp.eventBus;
     });
 
-    afterEach(function(){
+    afterEach(function () {
       this.myApp.stop();
       this.myApp.reset();
     });
