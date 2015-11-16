@@ -35,7 +35,6 @@ describe("Space.jobQueue", function () {
     it("Starts the jobServer when the module starts", function () {
       let jobServerStarted = sinon.spy();
       this.myApp.eventBus.subscribeTo('Space.jobQueue.JobServerStarted', jobServerStarted)
-      console.log(this.myApp)
       this.myApp.start();
       expect(jobServerStarted).to.have.been.calledOnce
     });
