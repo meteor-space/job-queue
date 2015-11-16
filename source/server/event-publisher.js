@@ -9,129 +9,83 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
     this.jobCollection.events.on('call', function (message) {
       switch(message.method) {
         case 'startJobServer':
-          self._onStartJobServer(message);
+          self.publish(new Space.jobQueue.JobServerStarted({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'shutdownJobServer':
-          self._onShutdownJobServer(message);
+          self.publish(new Space.jobQueue.JobServerShutdown({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'getWork':
-          self._onGetWork(message);
+          self.publish(new Space.jobQueue.JobTakenByWorker({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobRemove':
-          self._onJobRemove(message);
+          this.publish(new Space.jobQueue.JobRemoved({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobPause':
-          self._onJobPause(message);
+          self.publish(new Space.jobQueue.JobPaused({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobResume':
-          self._onJobResume(message);
+          self.publish(new Space.jobQueue.JobResumed({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobReady':
-          self._onJobReady(message);
+          self.publish(new Space.jobQueue.JobReady({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobCancel':
-          self._onJobCancel(message);
+          self.publish(new Space.jobQueue.JobCancelled({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobRestart':
-          self._onJobRestart(message);
+          self.publish(new Space.jobQueue.JobRestarted({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobSave':
-          self._onJobSave(message);
+          self.publish(new Space.jobQueue.JobAdded({
+            collection: self.jobCollection._name,
+            type: message.params[0].type
+          }))
           break;
         case 'jobRerun':
-          self._onJobRerun(message);
+          self.publish(new Space.jobQueue.JobRerun({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobProgress':
-          self._onJobProgress(message);
+          self.publish(new Space.jobQueue.JobProgressed({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobLog':
-          self._onJobLog(message);
+          self.publish(new Space.jobQueue.JobLogEntryMade({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobDone':
-          self._onJobDone(message);
+          self.publish(new Space.jobQueue.JobCompleted({
+            collection: self.jobCollection._name
+          }))
           break;
         case 'jobFail':
-          self._onJobFail(message);
+          self.publish(new Space.jobQueue.JobFailed({
+            collection: self.jobCollection._name
+          }))
           break;
       }
     });
-  },
-
-  _onStartJobServer() {
-    this.publish(new Space.jobQueue.JobServerStarted({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onShutdownJobServer() {
-    this.publish(new Space.jobQueue.JobServerShutdown({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onGetWork(message) {
-    this.publish(new Space.jobQueue.JobTakenByWorker({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobRemove(message) {
-    this.publish(new Space.jobQueue.JobRemoved({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobPause(message) {
-    this.publish(new Space.jobQueue.JobPaused({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobResume(message) {
-    this.publish(new Space.jobQueue.JobResumed({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobReady(message) {
-    this.publish(new Space.jobQueue.JobReady({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobCancel(message) {
-    this.publish(new Space.jobQueue.JobCancelled({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobRestart(message) {
-    this.publish(new Space.jobQueue.JobRestarted({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobSave(message) {
-    this.publish(new Space.jobQueue.JobAdded({
-      collection: this.jobCollection._name,
-      type: message.params[0].type
-    }))
-  },
-  _onJobRerun(message) {
-    this.publish(new Space.jobQueue.JobRerun({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobProgress(message) {
-    this.publish(new Space.jobQueue.JobProgressed({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobLog(message) {
-    this.publish(new Space.jobQueue.JobLogEntryMade({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobDone(message) {
-    this.publish(new Space.jobQueue.JobCompleted({
-      collection: this.jobCollection._name
-    }))
-  },
-  _onJobFail(message) {
-    this.publish(new Space.jobQueue.JobFailed({
-      collection: this.jobCollection._name
-    }))
   }
 
 });
