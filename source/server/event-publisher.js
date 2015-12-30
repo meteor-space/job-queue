@@ -1,5 +1,9 @@
 Space.Object.extend(Space.jobQueue, 'EventPublisher', {
 
+  mixin: [
+    Space.messaging.EventPublishing
+  ],
+
   dependencies: {
     jobCollection: 'Space.jobQueue.Jobs'
   },
@@ -89,5 +93,3 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
   }
 
 });
-
-Space.jobQueue.EventPublisher.mixin(Space.messaging.EventPublishing);
