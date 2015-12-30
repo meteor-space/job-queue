@@ -23,6 +23,7 @@ Package.onUse(function(api) {
     'source/server/module.js',
     'source/server/events.js',
     'source/server/event-publisher.js',
+    'source/server/publications.js',
     'source/server/logger.js'
   ],'server');
 

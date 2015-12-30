@@ -14,6 +14,10 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     }
   }),
 
+  singletons: [
+    'Space.jobQueue.Publications'
+  ],
+
   jobCollection: null,
 
   // ============= LIFECYCLE =============
