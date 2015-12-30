@@ -24,10 +24,10 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     this.injector.map('Space.jobQueue.EventPublisher').asSingleton();
     if(this._isLogging())
       this.injector.map('Space.jobQueue.Logger').asSingleton()
+    this._setupQueue();
   },
 
   afterInitialize() {
-    this._setupQueue();
     this.injector.create('Space.jobQueue.EventPublisher');
     if(this._isLogging())
       this.injector.create('Space.jobQueue.Logger')
