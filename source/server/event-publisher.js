@@ -74,7 +74,7 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
           }))
           break;
         case 'jobLog':
-          self.publish(new Space.jobQueue.JobLogEntryMade({
+          self.publish(new Space.jobQueue.JobLogAdded({
             collection: self.jobCollection._name
           }))
           break;
