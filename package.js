@@ -1,5 +1,5 @@
 Package.describe({
-  summary: 'Infrastructure for background, long running, or distributed work units',
+  summary: 'Infrastructure for background, long running, or distributed work units. Optional and configurable logging, stats, and remote access.',
   name: 'space:job-queue',
   version: '0.1.0',
   git: 'https://github.com/meteor-space/job-queue',
