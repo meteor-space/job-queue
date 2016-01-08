@@ -3,7 +3,8 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   requiredModules: ['Space.messaging'],
 
   dependencies: {
-    mongoInternals: 'MongoInternals'
+    mongoInternals: 'MongoInternals',
+    _: 'underscore'
   },
 
   configuration: Space.getenv.multi({
@@ -13,11 +14,11 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
       },
       serverStats: {
         enabled: ['SPACE_JQ_SERVER_STATS_ENABLED', true, 'bool'],
-        publish: true
+        publish: ['SPACE_JQ_SERVER_STATS_PUBLISH', true, 'bool']
       },
       remoteAccess: {
         enabled: ['SPACE_JQ_REMOTE_ACCESS_ENABLED', true, 'bool'],
-        publish: true
+        publish: ['SPACE_JQ_REMOTE_ACCESS_PUBLISH', true, 'bool']
       }
     }
   }),
@@ -66,8 +67,8 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     if(Space.jobQueue.jobCollection) {
       collection = Space.jobQueue.jobCollection
     } else {
-      let colletionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs')
-      collection = new JobCollection(colletionName, this._jobCollectionOptions());
+      let collectionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs');
+      collection = new JobCollection(collectionName, this._jobCollectionOptions());
       Space.jobQueue.jobCollection = collection;
     }
     this.injector.map('Space.jobQueue.Jobs').to(collection);
@@ -97,18 +98,17 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   },
 
   _jobCollectionOptions() {
-    let driverOptions;
+    let options = { noCollectionSuffix: true};
     if(this._externalMongo()) {
+      let driverOptions = {};
       if(this._externalMongoNeedsOplog()) {
-        driverOptions = {oplogUrl: Space.getenv('SPACE_JQ_MONGO_OPLOG_URL')};
-      } else {
-        driverOptions = {};
+        this._.extend(driverOptions, { oplogUrl: Space.getenv('SPACE_JQ_MONGO_OPLOG_URL') });
       }
       let mongoUrl = Space.getenv('SPACE_JQ_MONGO_URL');
-      return {_driver: new this.mongoInternals.RemoteCollectionDriver(mongoUrl, driverOptions)};
-    } else {
-      return {}
+      let driver = new this.mongoInternals.RemoteCollectionDriver(mongoUrl, driverOptions);
+      this._.extend(options, { _driver: driver });
     }
+    return options
   },
 
   _externalMongo() {
