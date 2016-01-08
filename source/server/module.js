@@ -10,15 +10,23 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     jobQueue: {
       log: {
         enabled: ['SPACE_JQ_LOG_ENABLED', true, 'bool']
+      },
+      serverStats: {
+        enabled: ['SPACE_JQ_SERVER_STATS_ENABLED', true, 'bool'],
+        publish: true
+      },
+      remoteAccess: {
+        enabled: ['SPACE_JQ_REMOTE_ACCESS_ENABLED', true, 'bool'],
+        publish: true
       }
     }
   }),
 
+  jobCollection: null,
+
   singletons: [
     'Space.jobQueue.Publications'
   ],
-
-  jobCollection: null,
 
   // ============= LIFECYCLE =============
 
@@ -27,14 +35,14 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     this.injector.map('Job').to(Job);
     this.injector.map('Space.jobQueue.EventPublisher').asSingleton();
     if(this._isLogging())
-      this.injector.map('Space.jobQueue.Logger').asSingleton()
+      this.injector.map('Space.jobQueue.Logger').asSingleton();
     this._setupQueue();
   },
 
   afterInitialize() {
     this.injector.create('Space.jobQueue.EventPublisher');
     if(this._isLogging())
-      this.injector.create('Space.jobQueue.Logger')
+      this.injector.create('Space.jobQueue.Logger');
   },
 
   onStart() {
@@ -53,16 +61,16 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   // ============= PRIVATE METHODS =============
 
   _setupQueue() {
-    var Collection;
-    var JobCollection = this.injector.get('JobCollection');
+    let collection;
+    let JobCollection = this.injector.get('JobCollection');
     if(Space.jobQueue.jobCollection) {
-      Collection = Space.jobQueue.jobCollection
+      collection = Space.jobQueue.jobCollection
     } else {
-      var colletionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue')
-      Collection = new JobCollection(colletionName, this._collectionOptions());
-      Space.jobQueue.jobCollection = Collection;
+      let colletionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs')
+      collection = new JobCollection(colletionName, this._jobCollectionOptions());
+      Space.jobQueue.jobCollection = collection;
     }
-    this.injector.map('Space.jobQueue.Jobs').to(Collection);
+    this.injector.map('Space.jobQueue.Jobs').to(collection);
   },
 
   _isLogging() {
@@ -88,15 +96,15 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     })
   },
 
-  _collectionOptions() {
-    var driverOptions;
+  _jobCollectionOptions() {
+    let driverOptions;
     if(this._externalMongo()) {
       if(this._externalMongoNeedsOplog()) {
         driverOptions = {oplogUrl: Space.getenv('SPACE_JQ_MONGO_OPLOG_URL')};
       } else {
         driverOptions = {};
       }
-      var mongoUrl = Space.getenv('SPACE_JQ_MONGO_URL');
+      let mongoUrl = Space.getenv('SPACE_JQ_MONGO_URL');
       return {_driver: new this.mongoInternals.RemoteCollectionDriver(mongoUrl, driverOptions)};
     } else {
       return {}
