@@ -25,6 +25,8 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   jobCollection: null,
 
   singletons: [
+    'Space.jobQueue.JobServer',
+    'Space.jobQueue.Logger',
     'Space.jobQueue.Publications'
   ],
 
@@ -34,15 +36,11 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
     this.injector.map('JobCollection').to(JobCollection);
     this.injector.map('Job').to(Job);
     this.injector.map('Space.jobQueue.EventPublisher').asSingleton();
-    if(this._isLogging())
-      this.injector.map('Space.jobQueue.Logger').asSingleton();
     this._setupQueue();
   },
 
   afterInitialize() {
     this.injector.create('Space.jobQueue.EventPublisher');
-    if(this._isLogging())
-      this.injector.create('Space.jobQueue.Logger');
   },
 
   onStart() {
@@ -71,10 +69,6 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
       Space.jobQueue.jobCollection = collection;
     }
     this.injector.map('Space.jobQueue.Jobs').to(collection);
-  },
-
-  _isLogging() {
-    return this.configuration.jobQueue.log.enabled
   },
 
   _allowAccess() {
