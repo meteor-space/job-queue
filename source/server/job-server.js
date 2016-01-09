@@ -18,7 +18,7 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
   _connectedWorkers: null,
 
   onDependenciesReady() {
-    this._setupQueue();
+    this._setupJobCollection();
     this._setupConnectedWorkersCollection();
     this.state = this.injector.get('Space.jobQueue.Jobs').stopped ? 'stopped' : 'running';
     Space.Object.prototype.onDependenciesReady.call(this);
@@ -47,7 +47,7 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
     if(this._state === expectedState) return true;
   },
 
-  _setupQueue() {
+  _setupJobCollection() {
     let collection;
     if(Space.jobQueue.JobServer._jobCollection) {
       collection = Space.jobQueue.JobServer._jobCollection
