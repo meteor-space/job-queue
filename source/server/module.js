@@ -10,6 +10,11 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
       remoteAccess: {
         enabled: ['SPACE_JQ_REMOTE_ACCESS_ENABLED', true, 'bool'],
         publish: ['SPACE_JQ_REMOTE_ACCESS_PUBLISH', true, 'bool']
+      },
+      stats: {
+        connectedWorkers: {
+          publish: ['SPACE_JQ_STATS_CONNECTED_WORKERS_PUBLISH', false, 'bool']
+        }
       }
     }
   }),

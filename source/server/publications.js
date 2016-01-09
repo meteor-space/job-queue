@@ -35,6 +35,18 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
         }
       });
     }
+    if(config.stats.connectedWorkers.publish) {
+      this._publications.push({
+        'space-jobQueue-connected-workers': (context, options = {}) => {
+          check(options, Object);
+          // Logged in users only -> later will be capability-based
+          if(context.userId === undefined) {
+            throw new Meteor.Error('Unauthorised Access');
+          }
+          return this.connectedWorkers.find();
+        }
+      });
+    }
     Space.messaging.Publication.prototype.onDependenciesReady.call(this);
   },
 
