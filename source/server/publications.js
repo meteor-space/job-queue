@@ -2,13 +2,15 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
 
   dependencies: {
     queue: 'Space.jobQueue.Jobs',
-    configuration: 'configuration'
+    configuration: 'configuration',
+    connectedWorkers: 'Space.jobQueue.ConnectedWorkers'
   },
 
   _publications: null,
 
   onDependenciesReady() {
     this._publications = [];
+    this._connectedWorkers = [];
     let config = this.configuration.jobQueue;
     if(config.remoteAccess.publish) {
       this._publications.push({
@@ -18,6 +20,13 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
           if(context.userId === undefined) {
             throw new Meteor.Error('Unauthorised Access');
           }
+          let connection = context.connection;
+          this.connectedWorkers.upsert(connection.id, { $set: connection});
+
+          context.onStop(() => {
+            this.connectedWorkers.remove(context.connection.id);
+          });
+
           let query = {status: 'ready'};
           if(options.type !== undefined) {
             query.type = options.type
