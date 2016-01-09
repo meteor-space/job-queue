@@ -10,8 +10,10 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
     collection: String,
     type: String
   },
-  JobTakenByWorker: {
-    collection: String
+  JobRequestedByWorker: {
+    collection: String,
+    jobTypesRequested: Array,
+    connection: Object
   },
   JobRemoved: {
     collection: String

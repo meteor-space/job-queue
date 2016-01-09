@@ -23,8 +23,10 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
           }));
           break;
         case 'getWork':
-          self.publish(new Space.jobQueue.JobTakenByWorker({
-            collection: self.jobCollection._name
+          self.publish(new Space.jobQueue.JobRequestedByWorker({
+            collection: self.jobCollection._name,
+            jobTypesRequested: message.params[0],
+            connection: message.connection
           }));
           break;
         case 'jobRemove':
