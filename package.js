@@ -21,7 +21,9 @@ Package.onUse(function(api) {
 
   api.addFiles([
     'source/server/module.js',
+    'source/server/errors.js',
     'source/server/events.js',
+    'source/server/job-server.js',
     'source/server/event-publisher.js',
     'source/server/publications.js',
     'source/server/logger.js'
