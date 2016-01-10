@@ -3,7 +3,8 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
   dependencies: {
     queue: 'Space.jobQueue.Jobs',
     configuration: 'configuration',
-    connectedWorkers: 'Space.jobQueue.ConnectedWorkers'
+    connectedWorkers: 'Space.jobQueue.ConnectedWorkers',
+    log: 'log'
   },
 
   _publications: null,
@@ -12,26 +13,46 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
     this._publications = [];
     this._connectedWorkers = [];
     let config = this.configuration.jobQueue;
+
     if(config.remoteAccess.publish) {
       this._publications.push({
-        'space-jobQueue-ready-jobs': (context, options = {}) => {
-          check(options, Object);
-          // Logged in users only -> later will be capability-based
+        'space-jobQueue-ready-jobs': (context, options) => {
+
           if(context.userId === undefined) {
+            context.stop();
             throw new Meteor.Error('Unauthorised Access');
           }
+
           let connection = context.connection;
-          this.connectedWorkers.upsert(connection.id, { $set: connection});
+
+          if(this._userIsWorker(context.userId)){
+            check(options, Match.Optional({lastSessionId: String }));
+            let lastSessionId = options.lastSessionId;
+            this.log.info(`Space.jobQueue Worker subscribed to space-jobQueue-ready-jobs`);
+
+            // Use the last session ID to cleanup any orphaned tracking docs
+            if(lastSessionId != '' && this._isOrphaned(lastSessionId)) {
+              this.log.info(`Cleaning up orphaned ConnectedWorkers session ${lastSessionId}`);
+              this._clearWorkerSession(lastSessionId);
+            }
+
+            this._addWorkerSession(connection);
+
+          } else {
+            this.log.info(`Non-worker subscription made to space-jobQueue-ready-jobs`);
+          }
 
           context.onStop(() => {
-            this.connectedWorkers.remove(context.connection.id);
+            if(context.userId !== undefined && this._userIsWorker(context.userId))
+              this._clearWorkerSession(connection.id);
           });
 
           let query = {status: 'ready'};
           if(options.type !== undefined) {
             query.type = options.type
           }
-          return this.queue.find(query);
+          let cursor = this.queue.find(query);
+          return cursor
         }
       });
     }
@@ -52,6 +73,36 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
 
   publications() {
     return this._publications;
+  },
+
+  _userIsWorker(userId) {
+    // Todo: Add alanning:roles
+    //this.roles.userIsInRole(userId, ['subscribe-to-job-queue'])
+    return true
+  },
+
+  _isOrphaned(sessionId) {
+    if(this.connectedWorkers.find({ _id: sessionId }).count() > 0) {
+      this.log.debug(`Orphaned Space.jobQueue.ConnectedWorkers document
+      correlated by connection/session id ${sessionId} found`);
+      return true;
+    }
+  },
+
+  _clearWorkerSession(id) {
+    this.connectedWorkers.remove({ _id: id });
+    this.log.debug(`Worker connection/session id ${id}
+    removed from Space.jobQueue.ConnectedWorkers`);
+  },
+
+  _addWorkerSession(connection) {
+    check(connection, Match.ObjectIncluding({id: String}));
+    this.connectedWorkers.insert({
+      _id: connection.id,
+      connection: connection
+    });
+    this.log.debug(`Worker connection/session id ${connection.id}
+    added to Space.jobQueue.ConnectedWorkers`);
   }
 
 });
