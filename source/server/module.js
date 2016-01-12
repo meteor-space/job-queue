@@ -50,6 +50,7 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   onReset() {
     this.injector.get('Space.jobQueue.Jobs').remove({});
     this.injector.get('Space.jobQueue.ConnectedWorkers').remove({});
+    this.injector.get('Space.jobQueue.JobServerStats').remove({});
   }
 
 });
