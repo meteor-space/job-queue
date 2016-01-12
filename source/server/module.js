@@ -5,7 +5,7 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   configuration: Space.getenv.multi({
     jobQueue: {
       log: {
-        enabled: ['SPACE_JQ_LOG_ENABLED', true, 'bool'],
+        enabled: ['SPACE_JQ_LOG_ENABLED', false, 'bool'],
         mode: ['SPACE_JQ_LOG_MODE', 'normal', 'string']
       },
       remoteAccess: {
