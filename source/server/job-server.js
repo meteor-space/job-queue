@@ -14,8 +14,8 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
   },
 
   onDependenciesReady() {
-    this._setupJobCollection();
     this._setupJobServerStatsCollection();
+    this._setupJobCollection();
     this._setupConnectedWorkersCollection();
     Space.Object.prototype.onDependenciesReady.call(this);
   },
@@ -27,30 +27,18 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
     }]
   },
 
-  _onJobServerStarted() {
-    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
-  },
-
-  _onJobServerShutdown() {
-    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
-  },
-
-  _setStoppedState(newState) {
-    this.injector.get('Space.jobQueue.JobServerStats').upsert(
-      {_id: 1}, { $set: { stopped: newState }}
-    );
-  },
-
   _setupJobCollection() {
-    let collection;
+    let jc;
     if(Space.jobQueue.JobServer._jobCollection) {
-      collection = Space.jobQueue.JobServer._jobCollection;
+      jc = Space.jobQueue.JobServer._jobCollection;
     } else {
       let collectionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs');
-      collection = new this.jobCollection(collectionName, this._jobCollectionOptions());
-      Space.jobQueue.JobServer._jobCollection = collection;
+      jc = new this.jobCollection(collectionName, this._jobCollectionOptions());
+      Space.jobQueue.JobServer._jobCollection = jc;
     }
-    this.injector.map('Space.jobQueue.Jobs').to(collection);
+    this.injector.map('Space.jobQueue.Jobs').to(jc);
+    this._setState({ stopped: jc.stopped });
+    this._setPromoteInterval();
   },
 
   _setupJobServerStatsCollection() {
@@ -63,7 +51,6 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
       Space.jobQueue.JobServer._jobServerStats = collection;
     }
     this.injector.map('Space.jobQueue.JobServerStats').to(collection);
-    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
   },
 
   _setupConnectedWorkersCollection() {
@@ -99,6 +86,31 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
 
   _externalMongoNeedsOplog() {
     if(Space.getenv('SPACE_JQ_MONGO_OPLOG_URL', '').length > 0) return true;
+  },
+
+  _setPromoteInterval() {
+    // All instances trigger a promote check for redundancy and load balancing
+    // If the startJobServer calls are staggered evenly
+    // at least once instance should trigger at the configured interval \
+    let instances = this.configuration.jobQueue.serverInstanceQty;
+    let promoteInterval = this.configuration.jobQueue.promoteInterval;
+    let interval = instances * promoteInterval;
+    this.injector.get('Space.jobQueue.Jobs').promote(interval);
+    this._setState({promoteInterval: interval});
+  },
+
+  _onJobServerStarted() {
+    this._setState({stopped: this.injector.get('Space.jobQueue.Jobs').stopped});
+  },
+
+  _onJobServerShutdown() {
+    this._setState({stopped: this.injector.get('Space.jobQueue.Jobs').stopped});
+  },
+
+  _setState(obj) {
+    this.injector.get('Space.jobQueue.JobServerStats').upsert(
+      {_id: 1}, { $set: obj}
+    );
   }
 
 });

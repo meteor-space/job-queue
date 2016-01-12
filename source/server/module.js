@@ -8,6 +8,8 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
         enabled: ['SPACE_JQ_LOG_ENABLED', false, 'bool'],
         mode: ['SPACE_JQ_LOG_MODE', 'normal', 'string']
       },
+      promoteInterval: ['SPACE_JQ_PROMOTE_INTERVAL', 15000, 'int'],
+      serverInstanceQty: ['SPACE_JQ_SERVER_INSTANCE_QTY', 1, 'int'],
       remoteAccess: {
         enabled: ['SPACE_JQ_REMOTE_ACCESS_ENABLED', true, 'bool'],
         publish: ['SPACE_JQ_REMOTE_ACCESS_PUBLISH', true, 'bool']
