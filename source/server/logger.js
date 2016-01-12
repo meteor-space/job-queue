@@ -36,8 +36,8 @@ Space.Object.extend(Space.jobQueue, 'Logger', {
         [Space.jobQueue.JobResumed]() {
           this.log.info(`Job resumed`);
         },
-        [Space.jobQueue.JobReady](job) {
-          this.log.info(`Job ready`, job);
+        [Space.jobQueue.JobsReady](event) {
+          this.log.info(`Previously waiting job/s are now ready`, event);
         },
         [Space.jobQueue.JobCancelled]() {
           this.log.warning(`Job cancelled`);

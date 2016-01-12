@@ -24,8 +24,11 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
   JobResumed: {
     collection: String
   },
-  JobReady: {
-    collection: String
+  JobsReady: {
+    collection: String,
+    promoted: Boolean,
+    forced: Boolean,
+    comparisonDate: Date
   },
   JobCancelled: {
     collection: String

@@ -44,9 +44,26 @@ Space.Object.extend(Space.jobQueue, 'EventPublisher', {
           }));
           break;
         case 'jobReady':
-          this.publish(new Space.jobQueue.JobReady({
-            collection: this.jobCollection._name
-          }));
+          // Ignore calls that don't cause any jobs to become ready
+          if(message.returnVal) {
+            // Emitted when the job-collection promote function triggers,
+            // making any waiting jobs ready. In this case the first param
+            // will be an empty array.
+            let promoted = _.isArray(message.params[0]) && message.params[0].length === 0;
+
+            // Job/s may be forced to become ready even with outstanding dependencies
+            let forced = message.params[1].force;
+
+            // The start time of the job is compared with a value supplied in this method call
+            let comparisonDate = message.params[1].time;
+
+            this.publish(new Space.jobQueue.JobsReady({
+              collection: this.jobCollection._name,
+              promoted: promoted,
+              forced: forced,
+              comparisonDate: comparisonDate
+            }));
+          }
           break;
         case 'jobCancel':
           this.publish(new Space.jobQueue.JobCancelled({
