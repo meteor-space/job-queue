@@ -41,22 +41,6 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
 
   onStart() {
     this.injector.get('Space.jobQueue.Jobs').startJobServer();
-    this.injector.get('Space.jobQueue.Jobs').allow({
-      worker(userId, method, params) {
-        if(userId) {
-          return true
-        } else {
-          return false
-        }
-      },
-      creator(userId, method, params) {
-        if(userId) {
-          return true
-        } else {
-          return false
-        }
-      }
-    })
   },
 
   onStop() {

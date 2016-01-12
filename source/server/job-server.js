@@ -39,6 +39,22 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
     this.injector.map('Space.jobQueue.Jobs').to(jc);
     this._setState({ stopped: jc.stopped });
     this._setPromoteInterval();
+    jc.allow({
+      worker(userId, method, params) {
+        if(userId) {
+          return true
+        } else {
+          return false
+        }
+      },
+      creator(userId, method, params) {
+        if(userId) {
+          return true
+        } else {
+          return false
+        }
+      }
+    })
   },
 
   _setupJobServerStatsCollection() {
