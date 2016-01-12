@@ -3,6 +3,7 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
   dependencies: {
     queue: 'Space.jobQueue.Jobs',
     configuration: 'configuration',
+    jobServerStats: 'Space.jobQueue.JobServerStats',
     connectedWorkers: 'Space.jobQueue.ConnectedWorkers',
     log: 'log'
   },
@@ -56,6 +57,20 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
         }
       });
     }
+
+    if(config.stats.jobServer.publish) {
+      this._publications.push({
+        'space-jobQueue-job-server-stats': (context, options = {}) => {
+          check(options, Object);
+          // Logged in users only -> later will be capability-based
+          if(context.userId === undefined) {
+            throw new Meteor.Error('Unauthorised Access');
+          }
+          return this.jobServerStats.find();
+        }
+      });
+    }
+
     if(config.stats.connectedWorkers.publish) {
       this._publications.push({
         'space-jobQueue-connected-workers': (context, options = {}) => {

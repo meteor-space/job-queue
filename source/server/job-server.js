@@ -13,14 +13,10 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
     jobCollection: 'JobCollection'
   },
 
-  _state: null,
-  _jobCollection: null,
-  _connectedWorkers: null,
-
   onDependenciesReady() {
     this._setupJobCollection();
+    this._setupJobServerStatsCollection();
     this._setupConnectedWorkersCollection();
-    this.state = this.injector.get('Space.jobQueue.Jobs').stopped ? 'stopped' : 'running';
     Space.Object.prototype.onDependenciesReady.call(this);
   },
 
@@ -32,25 +28,23 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
   },
 
   _onJobServerStarted() {
-    if(this.is('running'))
-      throw new Space.jobQueue.InconsistentStateError('started','running');
-    this._state = 'running';
+    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
   },
 
   _onJobServerShutdown() {
-    if(this.is('stopped'))
-      throw new Space.jobQueue.InconsistentStateError('shutdown','stopped');
-    this._state = 'stopped';
+    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
   },
 
-  is(expectedState) {
-    if(this._state === expectedState) return true;
+  _setStoppedState(newState) {
+    this.injector.get('Space.jobQueue.JobServerStats').upsert(
+      {_id: 1}, { $set: { stopped: newState }}
+    );
   },
 
   _setupJobCollection() {
     let collection;
     if(Space.jobQueue.JobServer._jobCollection) {
-      collection = Space.jobQueue.JobServer._jobCollection
+      collection = Space.jobQueue.JobServer._jobCollection;
     } else {
       let collectionName = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs');
       collection = new this.jobCollection(collectionName, this._jobCollectionOptions());
@@ -59,9 +53,30 @@ Space.jobQueue.JobServer = Space.Object.extend(Space.jobQueue, 'JobServer', {
     this.injector.map('Space.jobQueue.Jobs').to(collection);
   },
 
+  _setupJobServerStatsCollection() {
+    // In-memory collection tracks the current jobServer instance state
+    let collection;
+    if(Space.jobQueue.JobServer._jobServerStats) {
+      collection = Space.jobQueue.JobServer._jobServerStats;
+    } else {
+      collection = new this.mongo.Collection('space_jobQueue_jobServerStats', { connection: null});
+      Space.jobQueue.JobServer._jobServerStats = collection;
+    }
+    this.injector.map('Space.jobQueue.JobServerStats').to(collection);
+    this._setStoppedState(this.injector.get('Space.jobQueue.Jobs').stopped);
+  },
+
   _setupConnectedWorkersCollection() {
-    this._connectedWorkers = new this.mongo.Collection('space_jobQueue_connectedClients')
-    this.injector.map('Space.jobQueue.ConnectedWorkers').to(this._connectedWorkers);
+    // Distributed and persistent collection
+    // Tracks worker clients connected to all job server instances
+    let collection;
+    if(Space.jobQueue.JobServer._connectedWorkers) {
+      collection = Space.jobQueue.JobServer._connectedWorkers;
+    } else {
+      collection = new this.mongo.Collection('space_jobQueue_connectedClients');
+      Space.jobQueue.JobServer._connectedWorkers = collection;
+    }
+    this.injector.map('Space.jobQueue.ConnectedWorkers').to(collection);
   },
 
   _jobCollectionOptions() {
