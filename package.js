@@ -22,9 +22,10 @@ Package.onUse(function(api) {
   api.addFiles([
     'source/server/module.js',
     'source/server/events.js',
-    'source/server/job-server.js',
+    'source/server/job-server-controller.js',
     'source/server/event-publisher.js',
     'source/server/publications.js',
+    'source/server/job-server-stats-controller.js',
     'source/server/logger.js'
   ],'server');
 

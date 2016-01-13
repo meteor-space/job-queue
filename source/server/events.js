@@ -6,6 +6,10 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
   JobServerShutdown: {
     collection: String
   },
+  JobServerPromoteIntervalSet: {
+    collection: String,
+    interval: Number
+  },
   JobAdded: {
     collection: String,
     type: String

@@ -26,13 +26,12 @@ Space.jobQueue = Space.Module.define('Space.jobQueue', {
   }),
 
   singletons: [
-    'Space.jobQueue.JobServer',
+    'Space.jobQueue.JobServerController',
+    'Space.jobQueue.JobServerStatsController',
     'Space.jobQueue.EventPublisher',
     'Space.jobQueue.Logger',
     'Space.jobQueue.Publications'
   ],
-
-  // ============= LIFECYCLE =============
 
   onInitialize() {
     this.injector.map('JobCollection').to(JobCollection);
