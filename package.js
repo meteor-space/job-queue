@@ -45,6 +45,10 @@ Package.onTest(function(api) {
     'space:testing@2.0.1'
   ]);
 
-  api.addFiles('tests/server/job-server.tests.js', 'server');
+  api.addFiles([
+    'tests/server/test-app.js',
+    'tests/server/module.tests.js',
+    'tests/server/job-server.tests.js'
+    ], 'server');
 
 });
