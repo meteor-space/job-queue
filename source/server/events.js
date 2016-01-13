@@ -17,7 +17,7 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
   JobRequestedByWorker: {
     collection: String,
     jobTypesRequested: Array,
-    connection: Object
+    connection: Match.OneOf(Object, undefined)
   },
   JobRemoved: {
     collection: String
@@ -27,12 +27,6 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
   },
   JobResumed: {
     collection: String
-  },
-  JobsReady: {
-    collection: String,
-    promoted: Boolean,
-    forced: Boolean,
-    comparisonDate: Date
   },
   JobCancelled: {
     collection: String

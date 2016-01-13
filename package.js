@@ -14,6 +14,7 @@ Package.onUse(function(api) {
     'mongo',
     'ecmascript',
     'underscore',
+    'check',
     'space:base@3.2.1',
     'space:messaging@2.1.0',
     'vsivsi:job-collection@1.2.3'
@@ -36,6 +37,7 @@ Package.onTest(function(api) {
   api.use([
     'mongo',
     'ecmascript',
+    'check',
     'practicalmeteor:munit@2.1.5',
     'space:base@3.2.1',
     'space:messaging@2.1.0',
