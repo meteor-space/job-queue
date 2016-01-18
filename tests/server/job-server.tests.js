@@ -1,4 +1,4 @@
-describe("Space.jobQueue", function() {
+describe("Space.jobQueue.JobServer", function() {
 
   beforeEach(function() {
     this.myApp = new MyApp();
