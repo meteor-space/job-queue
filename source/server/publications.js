@@ -8,15 +8,13 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
     log: 'log'
   },
 
-  _publications: null,
-
-  onDependenciesReady() {
-    this._publications = [];
+  publications() {
+    let publications = [];
     this._connectedWorkers = [];
     let config = this.configuration.jobQueue;
 
     if(config.remoteAccess.publish) {
-      this._publications.push({
+      publications.push({
         'space-jobQueue-ready-jobs': (context, options) => {
           if(context.userId === null || context.userId === undefined) {
             context.stop();
@@ -58,7 +56,7 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
     }
 
     if(config.stats.jobServer.publish) {
-      this._publications.push({
+      publications.push({
         'space-jobQueue-job-server-stats': (context, options = {}) => {
           check(options, Object);
           // Logged in users only -> later will be capability-based
@@ -71,7 +69,7 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
     }
 
     if(config.stats.connectedWorkers.publish) {
-      this._publications.push({
+      publications.push({
         'space-jobQueue-connected-workers': (context, options = {}) => {
           check(options, Object);
           // Logged in users only -> later will be capability-based
@@ -82,11 +80,7 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
         }
       });
     }
-    Space.messaging.Publication.prototype.onDependenciesReady.call(this);
-  },
-
-  publications() {
-    return this._publications;
+    return publications;
   },
 
   _userIsWorker(userId) {
