@@ -18,8 +18,7 @@ Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
     if(config.remoteAccess.publish) {
       this._publications.push({
         'space-jobQueue-ready-jobs': (context, options) => {
-
-          if(context.userId === undefined) {
+          if(context.userId === null || context.userId === undefined) {
             context.stop();
             throw new Meteor.Error('Unauthorised Access');
           }
