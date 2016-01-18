@@ -2,12 +2,6 @@ describe("Space.jobQueue", function() {
 
   beforeEach(function() {
     this.myApp = new MyApp();
-    let injector = this.myApp.injector;
-    let job = injector.get('Job');
-    this.jobCollection = injector.get('Space.jobQueue.Jobs');
-    this.myJob = new job(this.jobCollection, 'myJobType', {
-      someProp: 'someValue'
-    });
     this.eventBus = this.myApp.eventBus;
   });
 
