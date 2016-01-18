@@ -38,7 +38,7 @@ Package.onTest(function(api) {
     'mongo',
     'ecmascript',
     'check',
-    'practicalmeteor:munit@2.1.5',
+    'practicalmeteor:mocha@2.1.0',
     'space:base@3.2.1',
     'space:messaging@2.1.0',
     'space:job-queue',
