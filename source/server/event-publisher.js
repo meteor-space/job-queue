@@ -1,4 +1,4 @@
-Space.Object.extend(Space.jobQueue, 'EventPublisher', {
+Space.Object.extend('Space.jobQueue.EventPublisher', {
 
   mixin: [
     Space.messaging.EventPublishing

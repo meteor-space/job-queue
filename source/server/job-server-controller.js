@@ -1,4 +1,4 @@
-Space.Object.extend(Space.jobQueue, 'JobServerController', {
+Space.Object.extend('Space.jobQueue.JobServerController', {
 
   dependencies: {
     _: 'underscore',

@@ -1,4 +1,4 @@
-Space.messaging.Publication.extend(Space.jobQueue, 'Publications', {
+Space.messaging.Publication.extend('Space.jobQueue.Publications', {
 
   dependencies: {
     queue: 'Space.jobQueue.Jobs',

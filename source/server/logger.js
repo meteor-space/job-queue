@@ -1,4 +1,4 @@
-Space.Object.extend(Space.jobQueue, 'Logger', {
+Space.Object.extend('Space.jobQueue.Logger', {
 
   mixin: [
     Space.messaging.EventSubscribing

@@ -1,4 +1,4 @@
-Space.Object.extend(Space.jobQueue, 'JobServerStatsController', {
+Space.Object.extend('Space.jobQueue.JobServerStatsController', {
 
   dependencies: {
     injector: 'Injector',
