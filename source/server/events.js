@@ -6,12 +6,18 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
   JobServerShutdown: {
     collection: String
   },
+  JobServerPromoteIntervalSet: {
+    collection: String,
+    interval: Number
+  },
   JobAdded: {
     collection: String,
     type: String
   },
-  JobTakenByWorker: {
-    collection: String
+  JobRequestedByWorker: {
+    collection: String,
+    jobTypesRequested: Array,
+    connection: Match.OneOf(Object, undefined)
   },
   JobRemoved: {
     collection: String
@@ -20,9 +26,6 @@ Space.messaging.define(Space.messaging.Event, 'Space.jobQueue', {
     collection: String
   },
   JobResumed: {
-    collection: String
-  },
-  JobReady: {
     collection: String
   },
   JobCancelled: {

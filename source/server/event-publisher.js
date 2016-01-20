@@ -1,93 +1,92 @@
-Space.Object.extend(Space.jobQueue, 'EventPublisher', {
+Space.Object.extend('Space.jobQueue.EventPublisher', {
+
+  mixin: [
+    Space.messaging.EventPublishing
+  ],
 
   dependencies: {
     jobCollection: 'Space.jobQueue.Jobs'
   },
 
   onDependenciesReady() {
-    var self = this;
-    this.jobCollection.events.on('call', function (message) {
+    this.jobCollection.events.on('call', (message) => {
       switch(message.method) {
         case 'startJobServer':
-          self.publish(new Space.jobQueue.JobServerStarted({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobServerStarted({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'shutdownJobServer':
-          self.publish(new Space.jobQueue.JobServerShutdown({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobServerShutdown({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'getWork':
-          self.publish(new Space.jobQueue.JobTakenByWorker({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobRequestedByWorker({
+            collection: this.jobCollection._name,
+            jobTypesRequested: message.params[0],
+            connection: message.connection
+          }));
           break;
         case 'jobRemove':
           this.publish(new Space.jobQueue.JobRemoved({
-            collection: self.jobCollection._name
-          }))
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobPause':
-          self.publish(new Space.jobQueue.JobPaused({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobPaused({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobResume':
-          self.publish(new Space.jobQueue.JobResumed({
-            collection: self.jobCollection._name
-          }))
-          break;
-        case 'jobReady':
-          self.publish(new Space.jobQueue.JobReady({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobResumed({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobCancel':
-          self.publish(new Space.jobQueue.JobCancelled({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobCancelled({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobRestart':
-          self.publish(new Space.jobQueue.JobRestarted({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobRestarted({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobSave':
-          self.publish(new Space.jobQueue.JobAdded({
-            collection: self.jobCollection._name,
+          this.publish(new Space.jobQueue.JobAdded({
+            collection: this.jobCollection._name,
             type: message.params[0].type
-          }))
+          }));
           break;
         case 'jobRerun':
-          self.publish(new Space.jobQueue.JobRerun({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobRerun({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobProgress':
-          self.publish(new Space.jobQueue.JobProgressed({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobProgressed({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobLog':
-          self.publish(new Space.jobQueue.JobLogEntryMade({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobLogAdded({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobDone':
-          self.publish(new Space.jobQueue.JobCompleted({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobCompleted({
+            collection: this.jobCollection._name
+          }));
           break;
         case 'jobFail':
-          self.publish(new Space.jobQueue.JobFailed({
-            collection: self.jobCollection._name
-          }))
+          this.publish(new Space.jobQueue.JobFailed({
+            collection: this.jobCollection._name
+          }));
           break;
       }
     });
+    Space.Object.prototype.onDependenciesReady.call(this);
   }
 
 });
-
-Space.jobQueue.EventPublisher.mixin(Space.messaging.EventPublishing);
