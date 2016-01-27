@@ -39,6 +39,10 @@ configuration: Space.getenv.multi({
    }
  }
 })
+
+### Remote Worker Access
+Documentation coming soon, but there is full support now and enabled by default
+
  ```
 ### Events
 Job server events are [translated and published](source/server/event-publisher.js)
