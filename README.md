@@ -39,11 +39,15 @@ configuration: Space.getenv.multi({
    }
  }
 })
-
+ ```
+In addition to the Module.configuration API above are these ENV-only options:
+- `SPACE_JQ_COLLECTION_NAME` - defaults to `space_jobQueue_jobs`
+- `SPACE_JQ_MONGO_URL`
+- `SPACE_JQ_MONGO_OPLOG_URL`
+ 
 ### Remote Worker Access
 Documentation coming soon, but there is full support now and enabled by default
 
- ```
 ### Events
 Job server events are [translated and published](source/server/event-publisher.js)
  on the server-side Space.messaging.EventBus module instance ready for
@@ -52,21 +56,21 @@ Job server events are [translated and published](source/server/event-publisher.j
 [Event Reference](source/server/events.js)
  
 ### Publications
- - `space-jobQueue-ready-jobs` - Use for observer-based remote workers
-   - enabled using `remoteAccess.publish` configuration.
-   - Optionally pass a `lastSessionId` property to reliably track connected workers.
-   - In your remote worker the subscription's connectionId can be saved to disk 
+- `space-jobQueue-ready-jobs` - Use for observer-based remote workers
+ - enabled using `remoteAccess.publish` configuration.
+ - Optionally pass a `lastSessionId` property to reliably track connected workers.
+ - In your remote worker the subscription's connectionId can be saved to disk 
    and passed back on reconnection to handle a few different disconnection/exit
     scenarios. This will be better documented when there's an example to reference.
- - `space-jobQueue-job-server-stats` - Exposes the jobServer running state and promoteInterval.
-   - Useful for visualising the state in your UI, such as a green or red solid circle.
- - `space-jobQueue-connected-workers` - Exposes a collection of connected worker 
+- `space-jobQueue-job-server-stats` - Exposes the jobServer running state and promoteInterval.
+ - Useful for visualising the state in your UI, such as a green or red solid circle.
+- `space-jobQueue-connected-workers` - Exposes a collection of connected worker 
    connections across all instances.
-   - Useful for showing a count in your UI 
+ - Useful for showing a count in your UI 
  
 ### Logging
-  - `normal` default, simple message
-  - `full` contains the message and full event payload
+- `normal` default, simple message
+- `full` contains the message and full event payload
 
 ## Installation
 ```
