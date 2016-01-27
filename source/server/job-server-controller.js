@@ -23,12 +23,12 @@ Space.Object.extend('Space.jobQueue.JobServerController', {
 
   _setupJobCollection() {
     let jc;
-    if(Space.jobQueue.JobServerController.prototype.jobCollection !== undefined) {
-      jc = Space.jobQueue.JobServerController.prototype.jobCollection;
+    if(Space.jobQueue.JobServerController.jobCollection !== undefined) {
+      jc = Space.jobQueue.JobServerController.jobCollection;
     } else {
       let name = Space.getenv('SPACE_JQ_COLLECTION_NAME', 'space_jobQueue_jobs');
       jc = new this.jobCollection(name, this._jobCollectionOptions());
-      Space.jobQueue.JobServerController.prototype.jobCollection = jc;
+      Space.jobQueue.JobServerController.jobCollection = jc;
     }
     this.jobs = jc;
     this.injector.map('Space.jobQueue.Jobs').to(jc);
