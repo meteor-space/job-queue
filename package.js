@@ -15,8 +15,8 @@ Package.onUse(function(api) {
     'ecmascript',
     'underscore',
     'check',
-    'space:base@3.2.1',
-    'space:messaging@2.1.0',
+    'space:base@4.1.0',
+    'space:messaging@3.0.1',
     'vsivsi:job-collection@1.2.3'
   ]);
 
@@ -39,10 +39,10 @@ Package.onTest(function(api) {
     'ecmascript',
     'check',
     'practicalmeteor:mocha@2.1.0',
-    'space:base@3.2.1',
-    'space:messaging@2.1.0',
+    'space:base@4.1.0',
+    'space:messaging@3.0.1',
     'space:job-queue',
-    'space:testing@2.0.1'
+    'space:testing@3.0.1'
   ]);
 
   api.addFiles([
