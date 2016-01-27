@@ -1,5 +1,5 @@
 Package.describe({
-  summary: 'Infrastructure for background, long running, or distributed work units. Optional and configurable logging, stats, and remote access.',
+  summary: 'Space job queue w/optional logging, published stats, and remote access. Is a vsivsi:job-collection',
   name: 'space:job-queue',
   version: '0.1.0',
   git: 'https://github.com/meteor-space/job-queue',
@@ -8,15 +8,15 @@ Package.describe({
 
 Package.onUse(function(api) {
 
-  api.versionsFrom("METEOR@1.0");
+  api.versionsFrom("1.2.0.1");
 
   api.use([
     'mongo',
     'ecmascript',
     'underscore',
     'check',
-    'space:base@3.2.1',
-    'space:messaging@2.1.0',
+    'space:base@4.1.0',
+    'space:messaging@3.0.1',
     'vsivsi:job-collection@1.2.3'
   ]);
 
@@ -39,10 +39,10 @@ Package.onTest(function(api) {
     'ecmascript',
     'check',
     'practicalmeteor:mocha@2.1.0',
-    'space:base@3.2.1',
-    'space:messaging@2.1.0',
+    'space:base@4.1.0',
+    'space:messaging@3.0.1',
     'space:job-queue',
-    'space:testing@2.0.1'
+    'space:testing@3.0.1'
   ]);
 
   api.addFiles([
