@@ -19,6 +19,7 @@ Space.Object.extend('Space.jobQueue.JobServerController', {
     this._setupJobCollection();
     this._setPromoteInterval();
     this._allowAccess();
+    Space.Object.prototype.onDependenciesReady.call(this);
   },
 
   _setupJobCollection() {

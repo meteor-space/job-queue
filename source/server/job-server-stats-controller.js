@@ -15,6 +15,7 @@ Space.Object.extend('Space.jobQueue.JobServerStatsController', {
   onDependenciesReady() {
     this._setupCollection();
     this._setupConnectedWorkersCollection();
+    Space.Object.prototype.onDependenciesReady.call(this);
   },
 
   eventSubscriptions() {
